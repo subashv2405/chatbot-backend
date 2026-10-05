@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { ChatHistory } from './entities/chat-history.entity';
+import { GeminiService } from '../gemini/gemini.service';
 
 @Injectable()
 export class ChatService {
     constructor(
         @InjectModel(ChatHistory)
         private readonly chatHistoryModel: typeof ChatHistory,
+        private readonly geminiService: GeminiService,
     ) {}
 
     private categories = [
@@ -71,13 +73,26 @@ export class ChatService {
             question: message,
             ...result,
         });
+        const answer = await this.geminiService.askGemini(message);
 
-        return result;
+        // return result;
+        return {answer:answer, category: "Gemini AI"};
     } catch (error) {
         throw new Error('Error processing the chat message');
     }
-  }
+    }
 
+    async getAnswerFromGemini(message: string,userId: number) {
+        const answer = await this.geminiService.askWithTools(
+            message,
+            userId,
+        );
+
+        return {
+            question: message,
+            answer,
+        };
+    }
     async getHistory(userId: number) {
         try{
             const history = await this.chatHistoryModel.findAll({

@@ -5,9 +5,10 @@ import { ChatController } from './chat.controller';
 import { ChatService } from './chat.service';
 import { UsersModule } from '../users/users.module';
 import { ChatHistory } from './entities/chat-history.entity';
+import { GeminiModule } from '../gemini/gemini.module';
 
 @Module({
-  imports: [AuthModule, UsersModule, SequelizeModule.forFeature([ChatHistory])],
+  imports: [AuthModule, UsersModule, GeminiModule, SequelizeModule.forFeature([ChatHistory])],
   controllers: [ChatController],
   providers: [ChatService],
 })

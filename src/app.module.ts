@@ -7,6 +7,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { ChatModule } from './chat/chat.module';
+import { GeminiService } from './gemini/gemini.service';
+import { GeminiModule } from './gemini/gemini.module';
+import { ChatHistory } from './chat/entities/chat-history.entity';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -14,10 +17,14 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     SequelizeModule.forRoot(databaseConfig),
+    SequelizeModule.forFeature([
+        ChatHistory,
+    ]),
     UsersModule,
     ChatModule,
+    GeminiModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, GeminiService],
 })
 export class AppModule {}

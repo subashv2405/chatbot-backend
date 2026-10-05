@@ -12,22 +12,26 @@ export class JwtGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
-
     const authHeader = request.headers.authorization;
 
-    if (!authHeader) {
+    if (typeof authHeader !== 'string') {
       throw new UnauthorizedException('Token is required');
     }
 
-    const token = authHeader.replace('Bearer ', '');
+    const bearerMatch = /^Bearer\s+(\S+)$/i.exec(authHeader.trim());
+    if (!bearerMatch) {
+      throw new UnauthorizedException(
+        'Authorization header must use the Bearer token format',
+      );
+    }
 
     try {
-      const payload = this.jwtService.verify(token);
+      const payload = this.jwtService.verify(bearerMatch[1]);
 
       request.user = payload;
 
       return true;
-    } catch (error) {
+    } catch {
       throw new UnauthorizedException('Invalid or expired token');
     }
   }

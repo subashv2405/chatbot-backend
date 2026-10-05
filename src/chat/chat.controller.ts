@@ -27,7 +27,8 @@ export class ChatController {
     @Body() body: { message: string },
     @Req() request: AuthenticatedRequest,
   ) {
-    return this.chatService.getAnswer(body.message, this.getUserId(request));
+    return this.chatService.getAnswerFromGemini(body.message, this.getUserId(request));
+    // return this.chatService.getAnswer(body.message, this.getUserId(request));
   }
 
   @UseGuards(JwtGuard)

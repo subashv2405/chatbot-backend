@@ -1,18 +1,18 @@
 import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
-interface ChatHistoryAttributes {
+interface LeaveRecordAttributes {
   id?: number;
   user_id: number;
-  question: string;
-  answer: string;
-  category?: string;
+  leave_type: string;
+  total_days: number;
+  used_days: number;
 }
 
 @Table({
-  tableName: 'chat_history',
+  tableName: 'leave_records',
   timestamps: true,
 })
-export class ChatHistory extends Model<ChatHistoryAttributes> {
+export class LeaveRecord extends Model<LeaveRecordAttributes> {
   @Column({
     primaryKey: true,
     autoIncrement: true,
@@ -27,20 +27,20 @@ export class ChatHistory extends Model<ChatHistoryAttributes> {
   declare user_id: number;
 
   @Column({
-    type: DataType.TEXT,
-    allowNull: false,
-  })
-  declare question: string;
-
-  @Column({
-    type: DataType.TEXT,
-    allowNull: false,
-  })
-  declare answer: string;
-
-  @Column({
     type: DataType.STRING,
-    allowNull: true,
+    allowNull: false,
   })
-  declare category?: string;
+  declare leave_type: string;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  declare total_days: number;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  declare used_days: number;
 }
